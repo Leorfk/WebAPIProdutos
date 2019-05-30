@@ -9,7 +9,7 @@ namespace ProdutosWebAPI.Models
     public class ProdutoRepositorio : IProdutoRepositorio
     {
         private List<Produto> Produtos = new List<Produto>();
-        private int _nextId;
+        private int _nextId = 1;
         public ProdutoRepositorio()
         {
             Add(new Produto { Nome = "Suco de laranja", Categoria = "Bebidas", Preco = 1.90M });

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ProdutosWebAPI.Interfaces;
+using ProdutosWebAPI.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,36 +13,59 @@ namespace ProdutosWebAPI.Controllers
     [Route("api/[controller]")]
     public class ProdutosController : Controller
     {
-        // GET: api/<controller>
+        static readonly IProdutoRepositorio repositorio = new ProdutoRepositorio();
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Produto> GetTodos()
         {
-            return new string[] { "value1", "value2" };
+            return repositorio.GetAll();
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id}", Name = "GetProduto")]
+        public IActionResult GetProdutoPorId(int id)
         {
-            return "value";
+            Produto produto = repositorio.Get(id);
+            if (produto == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(produto);
         }
-
-        // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult CriarProduto([FromBody] Produto model)
         {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            model = repositorio.Add(model);
+            return CreatedAtRoute("GetProduto", new { id = model.Id}, model);
         }
 
-        // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public IActionResult AtualizarProduto(int id, [FromBody] Produto model)
         {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            model.Id = id;
+            if (!repositorio.Update(model))
+            {
+                return NotFound();
+            }
+            return new NoContentResult();
         }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete]
+        public IActionResult DeletarProduto(int id)
         {
+            Produto model = repositorio.Get(id);
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            repositorio.Remove(id);
+            return new NoContentResult();
         }
     }
 }
