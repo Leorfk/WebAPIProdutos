@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace ProdutosWebAPI.Interfaces
 {
-    public interface IProdutoRepositorio
+    public interface IJudicialRepositorio
     {
-        IEnumerable<Produto> GetAll();
-        Produto Get(int id);
-        Produto Add(Produto model);
-        bool Update( Produto model);
+        IEnumerable<Judicial> GetAll();
+        Judicial Get(int id);
+        Judicial Add(Judicial judicial);
+        bool Update(Judicial judicial);
         void Remove(int id);
-
     }
 }

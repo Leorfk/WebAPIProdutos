@@ -56,7 +56,7 @@ namespace ProdutosWebAPI.Controllers
             }
             return new NoContentResult();
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeletarProduto(int id)
         {
             Produto model = repositorio.Get(id);
